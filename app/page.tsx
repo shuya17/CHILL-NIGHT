@@ -1,7 +1,20 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-2xl font-bold">CHILL NIGHT</h1>
-    </main>
+    <Box
+      component="main"
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="h4" component="h1" sx={{ fontWeight: "bold" }}>
+        CHILL NIGHT
+      </Typography>
+    </Box>
   );
 }
