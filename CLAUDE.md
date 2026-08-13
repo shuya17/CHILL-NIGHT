@@ -45,7 +45,7 @@
 | 領域 | 採用技術 | 備考 |
 |---|---|---|
 | フロントエンド | Next.js（React） | App Router想定 |
-| スタイリング | Tailwind CSS または MUI | チームで統一して選定 |
+| スタイリング | MUI
 | 地図表示 | Leaflet + OpenStreetMap | APIキー不要、クリックで座標取得しやすい |
 | 音声再生 | HTML5 `<audio>` | ループ再生・クロスフェードはJSで制御 |
 | データ管理 | 静的JSON（MVP） → 将来Supabase | 投稿機能が必要になった段階で移行 |
