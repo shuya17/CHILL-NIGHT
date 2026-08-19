@@ -1,9 +1,9 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import type { Map as LeafletMap } from "leaflet";
+import L, { type LatLng, type Map as LeafletMap } from "leaflet";
 import { useRef, useState, type TransitionEvent } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import Box from "@mui/material/Box";
 
 // 日本全体が収まる中心座標とズームレベル
@@ -14,7 +14,43 @@ const COLLAPSED_SIZE = { width: 480, height: 360 };
 const EXPANDED_SIZE = { width: 1000, height: 760 };
 const TRANSITION_DURATION_MS = 300;
 
-export default function GeoguesserMap() {
+// Next.js/Webpack環境ではleafletのデフォルトアイコンの画像パス解決に失敗するため、CDN URLを明示的に指定する
+const pinIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+interface GuessMarkerProps {
+  onSelect?: (lat: number, lng: number) => void;
+}
+
+function GuessMarker({ onSelect }: GuessMarkerProps) {
+  const [position, setPosition] = useState<LatLng | null>(null);
+
+  useMapEvents({
+    click(event) {
+      setPosition(event.latlng);
+      onSelect?.(event.latlng.lat, event.latlng.lng);
+    },
+  });
+
+  if (!position) return null;
+
+  return <Marker position={position} icon={pinIcon} />;
+}
+
+export interface GeoguesserMapProps {
+  // 地図クリックで選択された緯度経度を親コンポーネントに通知する
+  onGuessSelect?: (lat: number, lng: number) => void;
+}
+
+export default function GeoguesserMap({ onGuessSelect }: GeoguesserMapProps) {
   const [expanded, setExpanded] = useState(false);
   const mapRef = useRef<LeafletMap | null>(null);
 
@@ -82,6 +118,7 @@ export default function GeoguesserMap() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <GuessMarker onSelect={onGuessSelect} />
       </MapContainer>
       {!expanded && (
         <Box
