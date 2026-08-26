@@ -1,10 +1,11 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import L, { type LatLng, type Map as LeafletMap } from "leaflet";
+import L, { type LatLngLiteral, type Map as LeafletMap } from "leaflet";
 import { useRef, useState, type TransitionEvent } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 // 日本全体が収まる中心座標とズームレベル
 const JAPAN_CENTER: [number, number] = [36.2048, 138.2529];
@@ -27,16 +28,14 @@ const pinIcon = new L.Icon({
 });
 
 interface GuessMarkerProps {
-  onSelect?: (lat: number, lng: number) => void;
+  position: LatLngLiteral | null;
+  onSelect: (lat: number, lng: number) => void;
 }
 
-function GuessMarker({ onSelect }: GuessMarkerProps) {
-  const [position, setPosition] = useState<LatLng | null>(null);
-
+function GuessMarker({ position, onSelect }: GuessMarkerProps) {
   useMapEvents({
     click(event) {
-      setPosition(event.latlng);
-      onSelect?.(event.latlng.lat, event.latlng.lng);
+      onSelect(event.latlng.lat, event.latlng.lng);
     },
   });
 
@@ -46,15 +45,28 @@ function GuessMarker({ onSelect }: GuessMarkerProps) {
 }
 
 export interface GeoguesserMapProps {
-  // 地図クリックで選択された緯度経度を親コンポーネントに通知する
+  // 地図クリックで選択された緯度経度を親コンポーネントに通知する（クリックのたびに発火）
   onGuessSelect?: (lat: number, lng: number) => void;
+  // 「この場所で決定」ボタンが押されたことを親コンポーネントに通知する
+  onDecide?: () => void;
 }
 
-export default function GeoguesserMap({ onGuessSelect }: GeoguesserMapProps) {
+export default function GeoguesserMap({
+  onGuessSelect,
+  onDecide,
+}: GeoguesserMapProps) {
   const [expanded, setExpanded] = useState(false);
+  const [guessPosition, setGuessPosition] = useState<LatLngLiteral | null>(
+    null,
+  );
   const mapRef = useRef<LeafletMap | null>(null);
 
   const size = expanded ? EXPANDED_SIZE : COLLAPSED_SIZE;
+
+  const handleGuessSelect = (lat: number, lng: number) => {
+    setGuessPosition({ lat, lng });
+    onGuessSelect?.(lat, lng);
+  };
 
   // サイズのtransition完了後にLeafletへ再描画を促す
   const handleTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
@@ -65,78 +77,100 @@ export default function GeoguesserMap({ onGuessSelect }: GeoguesserMapProps) {
 
   return (
     <Box
-      onTransitionEnd={handleTransitionEnd}
       sx={{
         position: "fixed",
         right: 16,
         bottom: 16,
         width: size.width,
-        height: size.height,
-        borderRadius: 2,
-        overflow: "hidden",
-        boxShadow: 6,
-        transition: `width ${TRANSITION_DURATION_MS}ms ease, height ${TRANSITION_DURATION_MS}ms ease`,
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+        transition: `width ${TRANSITION_DURATION_MS}ms ease`,
         zIndex: 1000,
       }}
     >
-      {expanded && (
-        <Box
-          component="button"
-          type="button"
-          onClick={() => setExpanded(false)}
-          aria-label="地図を縮小"
-          sx={{
-            position: "absolute",
-            top: 6,
-            right: 6,
-            zIndex: 1,
-            width: 28,
-            height: 28,
-            border: "none",
-            borderRadius: "50%",
-            bgcolor: "background.paper",
-            boxShadow: 2,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 16,
-            lineHeight: 1,
-            "&:hover": { bgcolor: "grey.100" },
-          }}
-        >
-          ×
-        </Box>
-      )}
-      <MapContainer
-        ref={mapRef}
-        center={JAPAN_CENTER}
-        zoom={JAPAN_ZOOM}
-        style={{ height: "100%", width: "100%" }}
+      <Box
+        onTransitionEnd={handleTransitionEnd}
+        sx={{
+          position: "relative",
+          width: "100%",
+          height: size.height,
+          borderRadius: 2,
+          overflow: "hidden",
+          boxShadow: 6,
+          transition: `height ${TRANSITION_DURATION_MS}ms ease`,
+        }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <GuessMarker onSelect={onGuessSelect} />
-      </MapContainer>
-      {!expanded && (
-        <Box
-          component="button"
-          type="button"
-          onClick={() => setExpanded(true)}
-          aria-label="地図を拡大"
-          sx={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            border: "none",
-            padding: 0,
-            bgcolor: "transparent",
-            cursor: "pointer",
-          }}
-        />
+        {expanded && (
+          <Box
+            component="button"
+            type="button"
+            onClick={() => setExpanded(false)}
+            aria-label="地図を縮小"
+            sx={{
+              position: "absolute",
+              top: 6,
+              right: 6,
+              zIndex: 1,
+              width: 28,
+              height: 28,
+              border: "none",
+              borderRadius: "50%",
+              bgcolor: "background.paper",
+              boxShadow: 2,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 16,
+              lineHeight: 1,
+              "&:hover": { bgcolor: "grey.100" },
+            }}
+          >
+            ×
+          </Box>
+        )}
+        <MapContainer
+          ref={mapRef}
+          center={JAPAN_CENTER}
+          zoom={JAPAN_ZOOM}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <GuessMarker position={guessPosition} onSelect={handleGuessSelect} />
+        </MapContainer>
+        {!expanded && (
+          <Box
+            component="button"
+            type="button"
+            onClick={() => setExpanded(true)}
+            aria-label="地図を拡大"
+            sx={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              border: "none",
+              padding: 0,
+              bgcolor: "transparent",
+              cursor: "pointer",
+            }}
+          />
+        )}
+      </Box>
+      {expanded && (
+        <Button
+          variant="contained"
+          fullWidth
+          disabled={!guessPosition}
+          onClick={() => onDecide?.()}
+          sx={{ boxShadow: 4 }}
+        >
+          この場所で決定
+        </Button>
       )}
     </Box>
   );
