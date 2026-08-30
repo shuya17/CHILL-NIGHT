@@ -28,7 +28,7 @@ export default function Home() {
 
       {/* アプリの簡単な説明文 */}
       <Typography variant="body1" color="text.secondary">
-        リラックスしながら世界を旅したり、環境音を楽しんだりできるアプリです。
+        日本の夜景スポットを、当てて・眺めて楽しむチルアプリです。
         <br />
         お好きなモードを選んでください。
       </Typography>
