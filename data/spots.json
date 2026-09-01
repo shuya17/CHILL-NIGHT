@@ -63,5 +63,330 @@
       "evening": "/images/harborland-evening.jpg",
       "night": "/images/harborland-night.jpg"
     }
+  },
+   {
+    "id": "hatimannzaka",
+    "name": "八幡坂",
+    "prefecture": "北海道",
+    "lat": 41.7648,
+    "lng": 140.7128,
+    "description": "赤レンガがあるウォーターフロントから函館山へ続く並木道です。",
+    "images": {
+      "morning": "/images/spots/yakei-hatimannzaka-night.jpg",
+      "evening": "/images/spots/hatimannzaka-evening.jpg",
+      "night": "/images/spots/hatimannzaka-night.jpg"
+    }
+  },
+  {
+    "id": "kamahuseyama",
+    "name": "釜臥山展望室",
+    "prefecture": "青森県",
+    "lat": 36.0916,
+    "lng": 139.1389,
+    "description": "青森県下北半島の最高峰頂上近くに釜臥山（かまふせやま）展望台があります。標高約879mあり、昼間は宇曽利山湖や八甲田の山々、晴れた日は北海道も望む大パノラマを楽しめます。夜に輝く街の光が、まるでアゲハ蝶が羽を広げている姿のようだと言われています。",
+    "images": {
+      "morning": "/images/spots/kamahuseyama-morning.jpg",
+      "evening": "/images/spots/kamahuseyama-evening.jpg",
+      "night": "/images/spots/kamahuseyama-night.jpg"
+    }
+  },
+  {
+    "id": "iwayama",
+    "name": "岩山公園",
+    "prefecture": "岩手県",
+    "lat": 39.6999,
+    "lng": 141.1831,
+    "description": "標高約340mに位置する公園で、展望台からは盛岡の市街地や岩手山などを一望することができます。「日本夜景遺産」「夜景100選」に選定されており、駐車場に車を停めて、フロントガラスからも美しい夜景を眺められるのが魅力のひとつです。",
+    "images": {
+      "morning": "/images/spots/iwayama-morning.jpg",
+      "evening": "/images/spots/iwayama-evening.jpg",
+      "night": "/images/spots/iwayama-night.jpg"
+    }
+  },
+  {
+    "id": "nisizaou",
+    "name": "西蔵王公園展望広場",
+    "prefecture": "山形県",
+    "lat": 38.2077,
+    "lng": 140.3603,
+    "description": "蔵王山系にある西蔵王公園は、人と自然の調和したレクリエーションが充実した公園です。公園内の「展望広場」にある木製の展望デッキから山形市内の夜景を見下ろすことができます。",
+    "images": {
+      "morning": "/images/spots/nisizaou-morning.jpg",
+      "evening": "/images/spots/nisizaou-evening.jpg",
+      "night": "/images/spots/nisizaou-night.jpg"
+    }
+  },
+  {
+    "id": "gunnma",
+    "name": "群馬県庁展望ホール",
+    "prefecture": "群馬県",
+    "lat": 36.3906,
+    "lng": 139.0604,
+    "description": "群馬県庁の32階が展望ホールとなっており、ライトアップされた群馬大橋など前橋市を中心とした眺望が楽しめます。31階にはディナーを楽しめる2つのレストランがあるので、デートなどにもおすすめです。",
+    "images": {
+      "morning": "/images/spots/gunnma-morning.jpg",
+      "evening": "/images/spots/gunnma-evening.jpg",
+      "night": "/images/spots/gunma-hight.jpg"
+    }
+  },
+   {
+    "id": "minoyama",
+    "name": "美の山公園",
+    "prefecture": "埼玉県",
+    "lat": 36.0573,
+    "lng": 139.1129,
+    "description": "桜の名所として知られている美の山公園は、標高約586mに位置し、皆野町と秩父市を見渡せます。展望台の周りには視界を遮るものがなく、開放的な眺望を楽しめる夜景スポットです。運が良ければ、幻想的な雲海を見ることができます。",
+    "images": {
+      "morning": "/images/spots/minoyama-morning.jpg",
+      "evening": "/images/spots/minoyama-evening.jpg",
+      "night": "/images/spots/minoyamakouenn-hight.jpg"
+    }
+  },
+ {
+    "id": "airinn",
+    "name": "アイ・リンタウン展望室",
+    "prefecture": "千葉県",
+    "lat": 35.7291,
+    "lng": 139.9059,
+    "description": "地上約150mから360度の眺望を楽しむことができ、ここからの夜景は「夜景100選」に認定されています。45階に展望ロビーがあり、そこまでは3階からガラス張りのシースルーエレベーターで行くので、エレベーターからも眺めを楽しめます。屋上には展望デッキもあります。",
+    "images": {
+      "morning": "/images/spots/airinntaunn-morning.jpg",
+      "evening": "/images/spots/airinntaunn-evening.jpg",
+      "night": "/images/spots/airinntaunn-night.jpg"
+    }
+  },
+   {
+    "id": "kitte",
+    "name": "アイ・リンタウン展望室",
+    "prefecture": "東京都",
+    "lat": 35.7291,
+    "lng": 139.9060,
+    "description": "旧東京中央郵便局跡地に建てられた商業施設「KITTE」。無料で開放されている6階の「KITTEガーデン」は、ウッドデッキと芝生が美しく整備された都会のオアシス。丸の内エリアきってのビュースポットです。",
+    "images": {
+      "morning": "/images/spots/kitte-morning.jpg",
+      "evening": "/images/spots/kitte-evening.jpg",
+      "night": "/images/spots/kitte-night.jpg"
+    }
+  },
+   {
+    "id": "yokohama",
+    "name": "横浜ランドマークタワー　スカイガーデン",
+    "prefecture": "神奈川県",
+    "lat": 35.4545,
+    "lng": 139.6314,
+    "description": "デートスポットとして人気の横浜みなとみらいエリアの夜景と言えば、横浜ランドマークタワーの69階展望フロア「スカイガーデン」から見下ろす絶景。天気が良ければ横浜だけではなく、東京タワーや伊豆半島、富士山などの大パノラマを堪能できます。",
+    "images": {
+      "morning": "/images/spots/yokohama-morning.jpg",
+      "evening": "/images/spots/yokohama-evening.jpg",
+      "night": "/images/spots/yokohama-night.jpg"
+    }
+  },
+  {
+    "id": "kawasaki",
+    "name": "川崎マリエン",
+    "prefecture": "神奈川県",
+    "lat": 35.4969,
+    "lng": 139.7634,
+    "description": "地上約51mにあるタワー棟10階の展望室からは、360度のパノラマが広がります。東側は羽田空港、北側は東京都心を望み、空気が澄んでいるときは、東京タワーや東京スカイツリー®も見ることができます。",
+    "images": {
+      "morning": "/images/spots/kawasaki-morning.jpg",
+      "evening": "/images/spots/kawasaki-evening.jpg",
+      "night": "/images/spots/kawasaki-night.jpg"
+    }
+  },
+   {
+    "id": "yamanasi",
+    "name": "山梨笛吹川フルーツ公園",
+    "prefecture": "山梨県",
+    "lat": 35.7022,
+    "lng": 138.6652,
+    "description": "「新日本三大夜景」に選ばれている夜景スポットのひとつ。園内の「フルーツパーク富士屋ホテル 」の近くに展望広場があり、甲府盆地の眺望が広がります。公園にあるワイングラスの形をした「ブドウの池噴水」や、ドーム型の「くだもの広場」などのライトアップもあわせて楽しめます。",
+    "images": {
+      "morning": "/images/spots/yamanasi-morning.jpg",
+      "evening": "/images/spots/yamanasi-evening.jpg",
+      "night": "/images/spots/yamanasi-night.jpg"
+    }
+  },
+    {
+    "id": "tateisi",
+    "name": "立石公園",
+    "prefecture": "長野県",
+    "lat": 36.0540,
+    "lng": 138.1225,
+    "description": "標高約930mの高台に位置し、眼下に広がる諏訪湖を堪能できる公園です。人気映画『君の名は。』に登場する糸守湖を見下ろすスポットのモデルになったのではと噂されており、近年国内外から多くの人が訪れています。",
+    "images": {
+      "morning": "/images/spots/tateisi-morning.jpg",
+      "evening": "/images/spots/tateisi-evening.jpg",
+      "night": "/images/spots/tateisi-night.jpg"
+    }
+  },
+   {
+    "id": "bakauke",
+    "name": "Befcoばかうけ展望室",
+    "prefecture": "新潟県",
+    "lat": 37.9253,
+    "lng": 139.0597,
+    "description": "地上約125m、朱鷺メッセの31階にある「Befcoばかうけ展望室」は、新潟市街地や日本海、五頭連峰などが見渡せるビュースポット。南側に新潟市街地と信濃川、北側にフェリーターミナルなど、360度に広がるパノラマを楽しめます。",
+    "images": {
+      "morning": "/images/spots/bakauke-morning.jpg",
+      "evening": "/images/spots/bakauke-evening.jpg",
+      "night": "/images/spots/bakauke-night.jpg"
+    }
+  },
+   {
+    "id": "murakuni",
+    "name": "村国山",
+    "prefecture": "福井県",
+    "lat": 35.9009,
+    "lng": 136.1815,
+    "description": "標高約240m、越前市の中心部に位置する自然溢れる山です。展望台から越前市を中心とした街の光を眺めることができ、車を停めてフロントガラス越しに景色を堪能するのもおすすめです。",
+    "images": {
+      "morning": "/images/spots/murakuni-morning5.9009.jpg",
+      "evening": "/images/spots/murakuni-evening.jpg",
+      "night": "/images/spots/murakuni-night.jpg"
+    }
+  },
+  {
+    "id": "izu",
+    "name": "伊豆スカイライン",
+    "prefecture": "静岡県",
+    "lat": 35.1205,
+    "lng": 139.0400,
+    "description": "伊豆スカイラインは、伊豆半島東部の山稜を走る約40kmの自動車専用の観光道路です。熱海市街の夜景を見下ろせる「滝知山駐車場」や、車のフロントガラス越しに沼津市が見渡せる「無線塔下駐車場」など、多数の展望ポイントがあります。",
+    "images": {
+      "morning": "/images/spots/izu-morning5.9009.jpg",
+      "evening": "/images/spots/izu-evening.jpg",
+      "night": "/images/spots/izu-night.jpg"
+    }
+  },
+  {
+    "id": "higasi",
+    "name": "東山スカイタワー",
+    "prefecture": "愛知県",
+    "lat": 35.1567,
+    "lng": 136.9789,
+    "description": "東山動植物園に併設されている東山スカイタワー。地上約100m（標高約180m）に位置する5階の360°展望室からは、名古屋テレビ塔やナゴヤドームなど名古屋市内を一望できます。",
+    "images": {
+      "morning": "/images/spots/higasi-morning5.9009.jpg",
+      "evening": "/images/spots/higasi-evening.jpg",
+      "night": "/images/spots/higasi-night.jpg"
+    }
+  },
+  {
+    "id": "umi",
+    "name": "うみてらす１４",
+    "prefecture": "三重県",
+    "lat": 34.9933,
+    "lng": 136.6575,
+    "description": "うみてらす14は、地上約90m、ポートビル14階にある展望展示室です。全国的にも有名な四日市の工場夜景を見られる場所として人気で、コンビナートをはじめ、港や鈴鹿山脈などを眺められます。",
+    "images": {
+      "morning": "/images/spots/umi-morning5.9009.jpg",
+      "evening": "/images/spots/umi-evening.jpg",
+      "night": "/images/spots/umi-night.jpg"
+    }
+  },
+  {
+    "id": "abe",
+    "name": "あべのハルカス ハルカス３０００",
+    "prefecture": "大阪府",
+    "lat": 34.6460,
+    "lng": 135.5133,
+    "description": "あべのハルカスには、地上約300m、58～60階に展望台「ハルカス300」があります。天気が良い日は、六甲山や淡路島、関空まで一望することが可能。ガラスに遮られることなく景色を堪能できる、屋上のヘリポート見学ツアー（有料）も実施しています。",
+    "images": {
+      "morning": "/images/spots/abe-morning5.9009.jpg",
+      "evening": "/images/spots/abe-evening.jpg",
+      "night": "/images/spots/abe-night.jpg"
+    }
+  },
+  {
+    "id": "koube",
+    "name": "神戸ハーバーランド",
+    "prefecture": "兵庫県",
+    "lat": 34.6790,
+    "lng": 135.1818,
+    "description": "「神戸ハーバーランド」は、神戸の海辺に位置するショッピング・観光エリア。ライトアップされた海洋博物館やポートタワーなど、夜の美しいメリケンパークを眺められます。「モザイク大観覧車」からの眺めも見もので、六甲山や神戸大橋を見渡せます。",
+    "images": {
+      "morning": "/images/spots/koube-morning5.9009.jpg",
+      "evening": "/images/spots/koube-evening.jpg",
+      "night": "/images/spots/koube-night.jpg"
+    }
+  },
+   {
+    "id": "wakakusa",
+    "name": "若草山",
+    "prefectu": "奈良県",
+    "lat": 34.6911,
+    "lng": 135.8544,
+    "description": "「新日本三大夜景」に選ばれている高さ約342mの山。生駒山や奈良市内、京都市内を一望できます。奈良公園の東端にあるので、デートで夜に訪れるのもおすすめです。",
+    "images": {
+      "morning": "/images/spots/wakakusa-morning5.9009.jpg",
+      "evening": "/images/spots/wakakusa-evening.jpg",
+      "night": "/images/spots/wakakusa-night.jpg"
+    }
+  },
+  {
+    "id": "mayuyama",
+    "name": "眉山",
+    "prefectu": "徳島県",
+    "lat": 34.0669,
+    "lng": 134.5377,
+    "description": "標高約290mの山で、天気がよければ瀬戸内海や阿讃山脈を望むことができます。ロープウェイでアクセスできる山頂エリアには、展望レストランや休憩所があります。4月～10月はロープウェイの夜間運転が実施されているので、気軽に山頂からの夜景を満喫できます。",
+    "images": {
+      "morning": "/images/spots/mayuyama-morning5.9009.jpg",
+      "evening": "/images/spots/mayuyama-evening.jpg",
+      "night": "/images/spots/mayuyama-night.jpg"
+    }
+  },
+   {
+    "id": "hukuoka",
+    "name": "福岡タワー",
+    "prefectu": "福岡県",
+    "lat": 33.5932,
+    "lng": 130.3513,
+    "description": "福岡タワーの展望台は3フロアあり、煌めく福岡市の夜景を一望できます。館内には、ペアシートや、ディナーが楽しめるスカイラウンジもあるので、夜景デートにおすすめのスポットです。",
+    "images": {
+      "morning": "/images/spots/hukuoka-morning5.9009.jpg",
+      "evening": "/images/spots/hukuoka-evening.jpg",
+      "night": "/images/spots/hukuoka-night.jpg"
+    }
+  },
+   {
+    "id": "yukemuri",
+    "name": "湯けむり展望台",
+    "prefectu": "大分県",
+    "lat": 33.3155,
+    "lng": 131.4855,
+    "description": "「おんせん県」として知られている大分県にある展望スポットで、夜はライトアップされた幻想的な湯けむりを見ることができます。24時間いつでもベンチに座ってゆっくり景色を眺められますが、駐車場営業時間内であれば、車内からでも楽しめます。",
+    "images": {
+      "morning": "/images/spots/yukemuri-morning5.9009.jpg",
+      "evening": "/images/spots/yukemuri-evening.jpg",
+      "night": "/images/spots/yukemuri-night.jpg"
+    }
+  },
+   {
+    "id": "siroyama",
+    "name": "城山展望台",
+    "prefectu": "鹿児島県",
+    "lat": 31.5963,
+    "lng": 130.5501,
+    "description": "市街地中心部の、標高約107mの城山にある展望台です。鹿児島中心部の夜景が目の前に広がり、太陽が沈む時間帯は、桜島のシルエットをバックにした美しい景色を見ることができます。",
+    "images": {
+      "morning": "/images/spots/siroyama-morning5.9009.jpg",
+      "evening": "/images/spots/siroyama-evening.jpg",
+      "night": "/images/spots/siroyama-night.jpg"
+    }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+  
 ]
