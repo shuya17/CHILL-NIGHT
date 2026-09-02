@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local env files
+dev-server.log
+
+# GitHubの100MBファイルサイズ上限を超える音声素材（圧縮版に差し替えるまで除外）
+public/sounds/bonfire.mp3
+public/sounds/your name. OST piano.mp3

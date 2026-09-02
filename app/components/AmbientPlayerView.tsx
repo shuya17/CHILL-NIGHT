@@ -14,8 +14,20 @@ import type { Spot } from "../types/spot";
 
 const spots = spotsData as Spot[];
 
-// 「虫の声・波音など」の環境音のみを対象にする（BGM系トラックは対象外）
-const AMBIENT_SOUND_OPTIONS = [
+interface AmbientSoundOption {
+  value: string;
+  label: string;
+}
+
+// 環境音、BGM
+const AMBIENT_SOUND_OPTIONS: AmbientSoundOption[] = [
+  {
+    value:
+      "/sounds/(Weathering with you) OST - Fireworks Festival Piano Cover.mp3",
+    label: "天気の子 花火大会",
+  },
+  { value: "/sounds/your name. OST piano.mp3", label: "君の名はOST" },
+  { value: "/sounds/bonfire.mp3", label: "焚火" },
   { value: "/sounds/insects_sound_01.mp3", label: "虫の声 A" },
   { value: "/sounds/insects_sound_02.mp3", label: "虫の声 B" },
   { value: "/sounds/wave_sound_01.mp3", label: "波音 A" },
@@ -30,7 +42,7 @@ const AMBIENT_SOUND_OPTIONS = [
   { value: "/sounds/rain_sound_02.mp3", label: "雨音 B" },
   { value: "/sounds/night_city_sound_01.mp3", label: "夜の街 A" },
   { value: "/sounds/night_city_sound_02.mp3", label: "夜の街 B" },
-] as const;
+];
 
 function pickRandomSpot(excludeId?: string): Spot {
   if (spots.length === 1) return spots[0];
@@ -48,6 +60,9 @@ function pickRandomAmbientSound(): string {
 
 type ImageStatus = "loading" | "loaded" | "error";
 
+// 操作が無いまま経過したら操作パネルを隠す（眺めるだけの画面にするため）
+const CONTROLS_HIDE_DELAY_MS = 4000;
+
 export default function AmbientPlayerView() {
   const [spot, setSpot] = useState<Spot>(() => pickRandomSpot());
   const [imageStatus, setImageStatus] = useState<ImageStatus>("loading");
@@ -56,7 +71,9 @@ export default function AmbientPlayerView() {
   const [ambientSrc, setAmbientSrc] = useState<string>(() =>
     pickRandomAmbientSound(),
   );
+  const [controlsVisible, setControlsVisible] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     // 「操作不要で眺めるだけ」を実現するため自動再生を試みるが、
@@ -70,6 +87,26 @@ export default function AmbientPlayerView() {
       .then(() => setIsPlaying(true))
       .catch(() => setIsPlaying(false));
   }, [ambientSrc]);
+
+  useEffect(() => {
+    // マウント時から一定時間操作が無ければパネルを隠し始める
+    hideTimerRef.current = setTimeout(
+      () => setControlsVisible(false),
+      CONTROLS_HIDE_DELAY_MS,
+    );
+    return () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, []);
+
+  const handleActivity = () => {
+    setControlsVisible(true);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = setTimeout(
+      () => setControlsVisible(false),
+      CONTROLS_HIDE_DELAY_MS,
+    );
+  };
 
   const handleNextSpot = () => {
     setImageStatus("loading");
@@ -97,6 +134,9 @@ export default function AmbientPlayerView() {
 
   return (
     <Box
+      onPointerMove={handleActivity}
+      onClick={handleActivity}
+      onKeyDown={handleActivity}
       sx={{
         position: "relative",
         width: "100%",
@@ -104,6 +144,7 @@ export default function AmbientPlayerView() {
         height: "100dvh",
         overflow: "hidden",
         bgcolor: "common.black",
+        cursor: controlsVisible ? "default" : "none",
       }}
     >
       <audio ref={audioRef} src={ambientSrc} loop />
@@ -134,6 +175,7 @@ export default function AmbientPlayerView() {
         </Box>
       ) : (
         <Box
+          key={spot.id}
           component="img"
           src={spot.images.night}
           alt={spot.name}
@@ -146,6 +188,15 @@ export default function AmbientPlayerView() {
             height: "100%",
             objectFit: "cover",
             visibility: imageStatus === "loaded" ? "visible" : "hidden",
+            // Ken Burns効果: 静止画をゆっくり拡大・移動させて「生きている画面」に見せる
+            animation:
+              imageStatus === "loaded"
+                ? "ambientKenBurns 20s ease-in-out infinite alternate"
+                : "none",
+            "@keyframes ambientKenBurns": {
+              "0%": { transform: "scale(1) translate(0, 0)" },
+              "100%": { transform: "scale(1.1) translate(-1.5%, -1.5%)" },
+            },
           }}
         />
       )}
@@ -160,6 +211,9 @@ export default function AmbientPlayerView() {
           px: 2,
           py: 1.5,
           background: "linear-gradient(rgba(0, 0, 0, 0.55), transparent)",
+          opacity: controlsVisible ? 1 : 0,
+          pointerEvents: controlsVisible ? "auto" : "none",
+          transition: "opacity 500ms ease",
         }}
       >
         <Typography
@@ -189,6 +243,9 @@ export default function AmbientPlayerView() {
           flexDirection: "column",
           gap: 2,
           background: "linear-gradient(transparent, rgba(0, 0, 0, 0.85))",
+          opacity: controlsVisible ? 1 : 0,
+          pointerEvents: controlsVisible ? "auto" : "none",
+          transition: "opacity 500ms ease",
         }}
       >
         <Box>
