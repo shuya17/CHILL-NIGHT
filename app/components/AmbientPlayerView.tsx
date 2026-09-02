@@ -26,8 +26,6 @@ const AMBIENT_SOUND_OPTIONS: AmbientSoundOption[] = [
       "/sounds/(Weathering with you) OST - Fireworks Festival Piano Cover.mp3",
     label: "天気の子 花火大会",
   },
-  { value: "/sounds/your name. OST piano.mp3", label: "君の名はOST" },
-  { value: "/sounds/bonfire.mp3", label: "焚火" },
   { value: "/sounds/insects_sound_01.mp3", label: "虫の声 A" },
   { value: "/sounds/insects_sound_02.mp3", label: "虫の声 B" },
   { value: "/sounds/wave_sound_01.mp3", label: "波音 A" },
