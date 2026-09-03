@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import NightViewCrossfade from "./components/NightViewCrossfade";
 
 export default function Home() {
   return (
@@ -21,13 +22,20 @@ export default function Home() {
         px: 2,
       }}
     >
+      {/* 🌟 2. 追加：背景コンポーネントを配置 */}
+      <NightViewCrossfade />
+
       {/* タイトル */}
-      <Typography variant="h4" component="h1" sx={{ fontWeight: "bold" }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        sx={{ fontWeight: "bold", color: "white" }}
+      >
         CHILL NIGHT
       </Typography>
 
       {/* アプリの簡単な説明文 */}
-      <Typography variant="body1" color="text.secondary">
+      <Typography variant="body1" sx={{ color: "white" }}>
         日本の夜景スポットを、当てて・眺めて楽しむチルアプリです。
         <br />
         お好きなモードを選んでください。
@@ -55,6 +63,7 @@ export default function Home() {
           size="large"
           component={Link}
           href="/ambient"
+          sx={{ color: "white", borderColor: "white" }}
         >
           アンビエントモードを見る
         </Button>
