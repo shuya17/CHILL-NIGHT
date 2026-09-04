@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -44,46 +45,48 @@ export default function GeoguesserPage() {
   return (
     <>
       <Box
-        component="header"
-        sx={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1100,
-          width: "100%",
-          py: 1.5,
-          textAlign: "center",
-          bgcolor: "rgba(18, 18, 18, 0.72)",
-          backdropFilter: "blur(8px)",
-          boxShadow: 2,
-        }}
-      >
-        <Typography
-          variant="h5"
-          component="h1"
-          sx={{ fontWeight: "bold", color: "common.white" }}
-        >
-          CHILL NIGHT
-        </Typography>
-      </Box>
-      <Box
         component="main"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 4,
-          pb: 6,
+          position: "relative",
+          width: "100%",
+          // アドレスバーの出没があるモバイルブラウザでも画面いっぱいに表示されるようdvhを使う
+          height: "100dvh",
+          overflow: "hidden",
+          bgcolor: "common.black",
         }}
       >
-        <Box sx={{ width: { xs: "100%", sm: "97%" }, maxWidth: 1200 }}>
-          <NightViewPhoto onSpotSelect={setCurrentSpot} />
+        <NightViewPhoto onSpotSelect={setCurrentSpot} />
+
+        {/* 上部オーバーレイ: ブランド表示（アンビエントモードと統一） */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            px: 2,
+            py: 1.5,
+            background: "linear-gradient(rgba(0, 0, 0, 0.55), transparent)",
+          }}
+        >
+          <Typography
+            component={Link}
+            href="/"
+            variant="h6"
+            sx={{
+              color: "common.white",
+              fontWeight: "bold",
+              textDecoration: "none",
+            }}
+          >
+            CHILL NIGHT
+          </Typography>
         </Box>
-        <Box sx={{ width: "100%", maxWidth: 800, px: 2 }}>
-          <GeoguesserMap
-            onGuessSelect={(lat, lng) => setGuessCoordinate({ lat, lng })}
-            onDecide={handleDecide}
-          />
-        </Box>
+
+        <GeoguesserMap
+          onGuessSelect={(lat, lng) => setGuessCoordinate({ lat, lng })}
+          onDecide={handleDecide}
+        />
       </Box>
 
       <Dialog open={result !== null} maxWidth="xs" fullWidth>
