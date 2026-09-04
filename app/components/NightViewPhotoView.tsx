@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import spotsData from "../../data/spots.json";
@@ -33,16 +31,7 @@ export default function NightViewPhoto({ onSpotSelect }: NightViewPhotoProps) {
   }, []);
 
   return (
-    <Card
-      sx={{
-        position: "relative",
-        width: "100%",
-        // 実写真（サンプル画像 800x600）の縦横比に合わせ、拡大しても間延びしないようにする
-        aspectRatio: "4 / 3",
-        borderRadius: 2,
-        overflow: "hidden",
-      }}
-    >
+    <>
       {status === "loading" && (
         <Skeleton
           variant="rectangular"
@@ -68,13 +57,15 @@ export default function NightViewPhoto({ onSpotSelect }: NightViewPhotoProps) {
           <Typography variant="body2">画像を読み込めませんでした</Typography>
         </Box>
       ) : (
-        <CardMedia
+        <Box
           component="img"
           src={spot.images.night}
           alt={spot.name}
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}
           sx={{
+            position: "absolute",
+            inset: 0,
             width: "100%",
             height: "100%",
             objectFit: "cover",
@@ -82,6 +73,6 @@ export default function NightViewPhoto({ onSpotSelect }: NightViewPhotoProps) {
           }}
         />
       )}
-    </Card>
+    </>
   );
 }
