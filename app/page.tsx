@@ -1,10 +1,10 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Link from "next/link";
 import NightViewCrossfade from "./components/NightViewCrossfade";
+import HeroText from "./components/HeroText";
+import DescriptionText from "./components/DescriptionText";
+import ModeSelectButtons from "./components/ModeSelectButtons";
 
 export default function Home() {
   return (
@@ -16,58 +16,30 @@ export default function Home() {
         // ヘッダーの高さを考慮して、少し余裕を持たせた高さに調整
         minHeight: "80vh",
         alignItems: "center",
-        justifyContent: "center",
-        gap: 4,
+        // タイトル群を上へ、ボタン群を下へ離すため space-between にする
+        justifyContent: "space-between",
         textAlign: "center",
         px: 2,
+        pt: { xs: 14, sm: 20 },
+        pb: { xs: 6, sm: 10 },
       }}
     >
-      {/* 🌟 2. 追加：背景コンポーネントを配置 */}
+      {/* 背景コンポーネント */}
       <NightViewCrossfade />
 
-      {/* タイトル */}
-      <Typography
-        variant="h4"
-        component="h1"
-        sx={{ fontWeight: "bold", color: "white" }}
-      >
-        CHILL NIGHT
-      </Typography>
-
-      {/* アプリの簡単な説明文 */}
-      <Typography variant="body1" sx={{ color: "white" }}>
-        日本の夜景スポットを、当てて・眺めて楽しむチルアプリです。
-        <br />
-        お好きなモードを選んでください。
-      </Typography>
-
-      {/* 案内ボタンのコンテナ */}
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           gap: 2,
-          // スマホ（xs）では縦並び、PC（sm以上）では横並びになるレスポンシブ対応
-          flexDirection: { xs: "column", sm: "row" },
         }}
       >
-        <Button
-          variant="contained"
-          size="large"
-          component={Link}
-          href="/geoguesser"
-        >
-          ジオゲッサーで遊ぶ
-        </Button>
-        <Button
-          variant="outlined"
-          size="large"
-          component={Link}
-          href="/ambient"
-          sx={{ color: "white", borderColor: "white" }}
-        >
-          アンビエントモードを見る
-        </Button>
+        <HeroText />
+        <DescriptionText />
       </Box>
+
+      <ModeSelectButtons />
     </Box>
   );
 }
