@@ -26,16 +26,16 @@
     }
   },
   {
-    "id": "kikuseidai",
+    "id": "kouseidai",
     "name": "掬星台",
     "prefecture": "兵庫県",
     "lat": 34.7297,
     "lng": 135.2306,
     "description": "六甲山上に位置し、大阪湾から神戸市街まで広がる1000万ドルの夜景で知られる名所。",
     "images": {
-      "morning": "/images/kikuseidai-morning.jpg",
-      "evening": "/images/kikuseidai-evening.jpg",
-      "night": "/images/kikuseidai-night.jpg"
+      "morning": "/images/kouseidai-morning.jpg",
+      "evening": "/images/kouseidai-evening.jpg",
+      "night": "/images/kouseidai-night.jpg"
     }
   },
   {
@@ -46,24 +46,12 @@
     "lng": 139.7454,
     "description": "都心のシンボルとして親しまれる展望台から、東京の夜景とライトアップされたタワー自体も楽しめる。",
     "images": {
-      "morning": "/images/tokyotower-morning.jpg",
-      "evening": "/images/tokyotower-evening.jpg",
-      "night": "/images/tokyotower-night.jpg"
+      "morning": "/images/tokyou-morning.jpg",
+      "evening": "/images/tokyou-evening.jpg",
+      "night": "/images/tokyou-night.jpg"
     }
   },
-  {
-    "id": "harborland",
-    "name": "神戸ハーバーランド",
-    "prefecture": "兵庫県",
-    "lat": 34.6816,
-    "lng": 135.1816,
-    "description": "港町神戸ならではの、海と光が織りなすロマンチックな夜景スポット。",
-    "images": {
-      "morning": "/images/harborland-morning.jpg",
-      "evening": "/images/harborland-evening.jpg",
-      "night": "/images/harborland-night.jpg"
-    }
-  },
+  
    {
     "id": "hatimannzaka",
     "name": "八幡坂",
