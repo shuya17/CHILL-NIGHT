@@ -5,10 +5,13 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import spotsData from "../../data/spots.json";
 import type { Spot } from "../types/spot";
 
@@ -70,8 +73,20 @@ export default function AmbientPlayerView() {
     pickRandomAmbientSound(),
   );
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // 全画面表示はEscキーやブラウザUIからも解除されうるため、実際の状態をイベントで同期する
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement !== null);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
   useEffect(() => {
     // 「操作不要で眺めるだけ」を実現するため自動再生を試みるが、
@@ -128,6 +143,14 @@ export default function AmbientPlayerView() {
 
   const handleSoundChange = (event: SelectChangeEvent) => {
     setAmbientSrc(event.target.value);
+  };
+
+  const handleToggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
   };
 
   return (
@@ -199,7 +222,7 @@ export default function AmbientPlayerView() {
         />
       )}
 
-      {/* 上部オーバーレイ: ブランド表示（トップページへの導線を兼ねる） */}
+      {/* 上部オーバーレイ: ブランド表示（トップページへの導線を兼ねる）と全画面表示ボタン */}
       <Box
         sx={{
           position: "absolute",
@@ -208,6 +231,9 @@ export default function AmbientPlayerView() {
           right: 0,
           px: 2,
           py: 1.5,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           background: "linear-gradient(rgba(0, 0, 0, 0.55), transparent)",
           opacity: controlsVisible ? 1 : 0,
           pointerEvents: controlsVisible ? "auto" : "none",
@@ -226,6 +252,17 @@ export default function AmbientPlayerView() {
         >
           CHILL NIGHT
         </Typography>
+
+        <IconButton
+          onClick={handleToggleFullscreen}
+          aria-label={isFullscreen ? "全画面表示を解除" : "全画面表示にする"}
+          sx={{
+            color: "common.white",
+            "&:hover": { bgcolor: "rgba(255, 255, 255, 0.15)" },
+          }}
+        >
+          {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+        </IconButton>
       </Box>
 
       {/* 下部オーバーレイ: スポット情報と操作パネル */}
