@@ -24,11 +24,6 @@ interface AmbientSoundOption {
 
 // 環境音、BGM
 const AMBIENT_SOUND_OPTIONS: AmbientSoundOption[] = [
-  {
-    value:
-      "/sounds/(Weathering with you) OST - Fireworks Festival Piano Cover.mp3",
-    label: "天気の子 花火大会",
-  },
   { value: "/sounds/insects_sound_01.mp3", label: "虫の声 A" },
   { value: "/sounds/insects_sound_02.mp3", label: "虫の声 B" },
   { value: "/sounds/wave_sound_01.mp3", label: "波音 A" },
