@@ -4,7 +4,7 @@
     "name": "函館山",
     "prefecture": "北海道",
     "lat": 41.7595,
-    "lng": 140.7069,
+    "lng": 140.7044,
     "description": "「世界三大夜景」の一つに数えられる、津軽海峡と函館の街並みを一望できる絶景スポット。",
     "images": {
       "morning": "/images/spots/hakodateyama-morning.jpg",
@@ -69,8 +69,8 @@
     "id": "kamahuseyama",
     "name": "釜臥山展望室",
     "prefecture": "青森県",
-    "lat": 36.0916,
-    "lng": 139.1389,
+    "lat": 41.2818,
+    "lng": 141.1204,
     "description": "青森県下北半島の最高峰頂上近くに釜臥山（かまふせやま）展望台があります。標高約879mあり、昼間は宇曽利山湖や八甲田の山々、晴れた日は北海道も望む大パノラマを楽しめます。夜に輝く街の光が、まるでアゲハ蝶が羽を広げている姿のようだと言われています。",
     "images": {
       "morning": "/images/spots/kamahuseyama-morning.jpg",
@@ -147,8 +147,8 @@
     "id": "kitte",
     "name": "KITTEガーデン",
     "prefecture": "東京都",
-    "lat": 35.7291,
-    "lng": 139.9060,
+    "lat": 35.6797,
+    "lng": 139.7645,
     "description": "旧東京中央郵便局跡地に建てられた商業施設「KITTE」。無料で開放されている6階の「KITTEガーデン」は、ウッドデッキと芝生が美しく整備された都会のオアシス。丸の内エリアきってのビュースポットです。",
     "images": {
       "morning": "/images/spots/kitte-morning.jpg",
