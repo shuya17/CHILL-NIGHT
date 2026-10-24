@@ -1,39 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CHILL NIGHT（夜景めぐり）
 
-## Getting Started
+日本の夜景スポットに特化した、息抜き用のチルWebアプリです。写真を見て場所を当てる「夜景クイズ」と、好きなスポットの景色をぼーっと眺められる「アンビエントモード」の2本柱で構成しています。投稿・SNS的な要素は持たず、「見る・当てる・眺める」だけで完結する軽量アプリを目指しています。
 
-First, run the development server:
+対象とする夜景は、日本三大夜景・新日本三大夜景・夜景100選など、知名度が高く「きれいで有名な景色」に絞っています。
+
+## 主な機能
+
+### 夜景クイズ（ジオゲッサーモード）
+- ランダムに表示される日本の夜景スポット写真を見て、地図をクリックして場所を推測
+- 正解地点との距離に応じてスコアを算出
+- 決定後は正解地点にピンが立ち、スポット名・説明・距離・スコアを確認できる
+
+### アンビエントモード
+- ページを開くと自動でランダムなスポットの夜景写真が全画面表示される
+- 環境音（虫の声・波音など）を同時再生（再生/停止、音源の切り替えが可能）
+- 全画面表示トグル、操作が無いと自動で隠れるUIなど、「ながら見」に適した画面構成
+
+## 技術スタック
+
+| 領域 | 採用技術 |
+|---|---|
+| フロントエンド | Next.js（App Router） / React |
+| スタイリング | MUI |
+| 地図表示 | Leaflet + OpenStreetMap |
+| 音声再生 | HTML5 `<audio>` |
+| データ管理 | 静的JSON（`data/spots.json`） |
+| デプロイ | Vercel |
+
+プロジェクトの背景・設計方針・Phase2以降の機能案などの詳細は [CLAUDE.md](./CLAUDE.md) を参照してください。
+
+## セットアップ
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) を開くと確認できます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+その他、以下のコマンドが使えます。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # 本番ビルド
+npm run start   # 本番ビルドの起動
+npm run lint    # ESLintチェック
+```
 
-## Learn More
+## ディレクトリ構成（主なもの）
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## 開発メンバー
-- koki：よろしくお願いします！
+```
+app/
+  page.tsx            # トップページ
+  geoguesser/page.tsx # 夜景クイズ画面
+  ambient/page.tsx    # アンビエントモード画面
+  components/         # 画面を構成する各コンポーネント
+  lib/                # 距離計算・スコア計算などのロジック
+  types/              # 型定義
+data/
+  spots.json          # 夜景スポットのデータ（写真パス・緯度経度・説明文）
+public/
+  images/spots/       # スポット写真
+  sounds/             # 環境音・BGM素材
+```
