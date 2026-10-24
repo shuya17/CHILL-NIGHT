@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import Box from "@mui/material/Box";
+import BrandHeader from "./BrandHeader";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
@@ -217,48 +217,21 @@ export default function AmbientPlayerView() {
         />
       )}
 
-      {/* 上部オーバーレイ: ブランド表示（トップページへの導線を兼ねる）と全画面表示ボタン */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          px: 2,
-          py: 1.5,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background: "linear-gradient(rgba(0, 0, 0, 0.55), transparent)",
-          opacity: controlsVisible ? 1 : 0,
-          pointerEvents: controlsVisible ? "auto" : "none",
-          transition: "opacity 500ms ease",
-        }}
-      >
-        <Typography
-          component={Link}
-          href="/"
-          variant="h6"
-          sx={{
-            color: "common.white",
-            fontWeight: "bold",
-            textDecoration: "none",
-          }}
-        >
-          CHILL NIGHT
-        </Typography>
-
-        <IconButton
-          onClick={handleToggleFullscreen}
-          aria-label={isFullscreen ? "全画面表示を解除" : "全画面表示にする"}
-          sx={{
-            color: "common.white",
-            "&:hover": { bgcolor: "rgba(255, 255, 255, 0.15)" },
-          }}
-        >
-          {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-        </IconButton>
-      </Box>
+      <BrandHeader
+        visible={controlsVisible}
+        endAdornment={
+          <IconButton
+            onClick={handleToggleFullscreen}
+            aria-label={isFullscreen ? "全画面表示を解除" : "全画面表示にする"}
+            sx={{
+              color: "common.white",
+              "&:hover": { bgcolor: "rgba(255, 255, 255, 0.15)" },
+            }}
+          >
+            {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+          </IconButton>
+        }
+      />
 
       {/* 下部オーバーレイ: スポット情報と操作パネル */}
       <Box
