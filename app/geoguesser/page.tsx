@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import BrandHeader from "../components/BrandHeader";
 import GeoguesserMap from "../components/GeoguesserMap";
 import NightViewPhoto from "../components/NightViewPhoto";
 import { calculateDistance } from "../lib/distance";
@@ -64,31 +63,7 @@ export default function GeoguesserPage() {
     >
       <NightViewPhoto onSpotSelect={setCurrentSpot} />
 
-      {/* 上部オーバーレイ: ブランド表示（アンビエントモードと統一） */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          px: 2,
-          py: 1.5,
-          background: "linear-gradient(rgba(0, 0, 0, 0.55), transparent)",
-        }}
-      >
-        <Typography
-          component={Link}
-          href="/"
-          variant="h6"
-          sx={{
-            color: "common.white",
-            fontWeight: "bold",
-            textDecoration: "none",
-          }}
-        >
-          CHILL NIGHT
-        </Typography>
-      </Box>
+      <BrandHeader />
 
       <GeoguesserMap
         onGuessSelect={(lat, lng) => setGuessCoordinate({ lat, lng })}
