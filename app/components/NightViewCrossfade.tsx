@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-// パスは適宜調整してください
 import spotsData from "../../data/spots.json";
+import type { Spot } from "../types/spot";
+
+const spots = spotsData as Spot[];
 
 export default function NightViewCrossfade() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 🌟 ここを修正：spot.images.night から画像のURLを取得するように変更
+  // spot.images.night から画像のURLを取得する
   // ※もし特定の時間帯がない場合は、エラーを防ぐためにオプショナルチェーン（?.）を使っています
-  const images = Array.isArray(spotsData)
-    ? spotsData.map((spot: any) => spot.images?.night).filter(Boolean)
-    : [];
+  const images = spots.map((spot) => spot.images?.night).filter(Boolean);
 
   useEffect(() => {
     // 画像がない場合や1枚しかない場合はタイマーをセットしない
