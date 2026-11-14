@@ -1,3 +1,4 @@
+
 // localStorageに保存するときに使用するキー
 const FAVORITES_KEY = "chill-night-favorites";
 
@@ -8,14 +9,15 @@ export function getFavorites(): string[] {
     return [];
   }
 
-  const favorites = localStorage.getItem(FAVORITES_KEY);
-
-  // まだお気に入りが保存されていない場合
-  if (favorites === null) {
-    return [];
-  }
-
   try {
+    // localStorageからお気に入りを取得する
+    const favorites = localStorage.getItem(FAVORITES_KEY);
+
+    // まだお気に入りが保存されていない場合
+    if (favorites === null) {
+      return [];
+    }
+
     const parsed: unknown = JSON.parse(favorites);
 
     // 保存データが文字列の配列であることを確認
@@ -28,8 +30,20 @@ export function getFavorites(): string[] {
 
     return [];
   } catch {
-    // JSONの形式が壊れている場合
+    // localStorageへのアクセスやJSONの解析に失敗した場合
     return [];
+  }
+}
+
+// お気に入り一覧をlocalStorageに保存する
+function saveFavorites(favorites: string[]): void {
+  try {
+    localStorage.setItem(
+      FAVORITES_KEY,
+      JSON.stringify(favorites)
+    );
+  } catch {
+    // 保存に失敗してもアプリが停止しないようにする
   }
 }
 
@@ -47,18 +61,12 @@ export function toggleFavorite(id: string): void {
       (favoriteId) => favoriteId !== id
     );
 
-    localStorage.setItem(
-      FAVORITES_KEY,
-      JSON.stringify(updatedFavorites)
-    );
+    saveFavorites(updatedFavorites);
   } else {
     // 登録されていない場合は追加
     favorites.push(id);
 
-    localStorage.setItem(
-      FAVORITES_KEY,
-      JSON.stringify(favorites)
-    );
+    saveFavorites(favorites);
   }
 }
 
