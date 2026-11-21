@@ -5,21 +5,26 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import TimerIcon from "@mui/icons-material/Timer";
+import TimerOffIcon from "@mui/icons-material/TimerOff";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import AmbientControls, { AMBIENT_SOUND_OPTIONS } from "./AmbientControls";
-import AmbientPhoto, { type ImageStatus } from "./AmbientPhoto";
 import AmbientSpotInfo from "./AmbientSpotInfo";
 import BrandHeader from "./BrandHeader";
+import PomodoroTimer from "./PomodoroTimer";
+import TimeOfDayCrossfade from "./TimeOfDayCrossfade";
+import { getFavorites, toggleFavorite } from "../lib/favorites";
 import spotsData from "../../data/spots.json";
 import type { Spot } from "../types/spot";
 
 const spots = spotsData as Spot[];
 
-function pickRandomSpot(excludeId?: string): Spot {
-  if (spots.length === 1) return spots[0];
+// candidates の中からランダムに選ぶ（候補が2件以上あれば excludeId 以外を選ぶ）
+function pickRandomSpot(excludeId?: string, candidates: Spot[] = spots): Spot {
+  if (candidates.length === 1) return candidates[0];
   let next: Spot;
   do {
-    next = spots[Math.floor(Math.random() * spots.length)];
+    next = candidates[Math.floor(Math.random() * candidates.length)];
   } while (excludeId && next.id === excludeId);
   return next;
 }
@@ -32,10 +37,20 @@ function pickRandomAmbientSound(): string {
 // 操作が無いまま経過したら操作パネルを隠す（眺めるだけの画面にするため）
 const CONTROLS_HIDE_DELAY_MS = 4000;
 
+// 朝・夕・夜の写真を切り替える間隔とフェード時間（ながら見向けにゆっくりめ）
+const TIME_OF_DAY_INTERVAL_MS = 15000;
+const TIME_OF_DAY_FADE_MS = 3000;
+
 export default function AmbientPlayerView() {
   const [spot, setSpot] = useState<Spot>(() => pickRandomSpot());
-  const [imageStatus, setImageStatus] = useState<ImageStatus>("loading");
   const [isPlaying, setIsPlaying] = useState(false);
+  // タイマーは操作パネルが隠れても残り時間を確認できるよう常時表示し、不要ならヘッダーから隠せる
+  const [timerVisible, setTimerVisible] = useState(true);
+  // この画面はクライアントのみで描画されるため、初期化時に localStorage を直接読める
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() =>
+    getFavorites(),
+  );
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   // 初期値はランダムに選び、以降はユーザーがセレクターで自由に指定できる
   const [ambientSrc, setAmbientSrc] = useState<string>(() =>
     pickRandomAmbientSound(),
@@ -90,8 +105,16 @@ export default function AmbientPlayerView() {
   };
 
   const handleNextSpot = () => {
-    setImageStatus("loading");
-    setSpot((current) => pickRandomSpot(current.id));
+    const favoriteSpots = spots.filter((s) => favoriteIds.includes(s.id));
+    // お気に入りが全て解除された場合は全スポットから選ぶ
+    const candidates =
+      favoritesOnly && favoriteSpots.length > 0 ? favoriteSpots : spots;
+    setSpot((current) => pickRandomSpot(current.id, candidates));
+  };
+
+  const handleToggleFavorite = () => {
+    toggleFavorite(spot.id);
+    setFavoriteIds(getFavorites());
   };
 
   const handleTogglePlay = () => {
@@ -138,30 +161,53 @@ export default function AmbientPlayerView() {
     >
       <audio ref={audioRef} src={ambientSrc} loop />
 
-      <AmbientPhoto
+      <TimeOfDayCrossfade
         key={spot.id}
-        src={spot.images.night}
+        images={spot.images}
         alt={spot.name}
-        status={imageStatus}
-        onLoad={() => setImageStatus("loaded")}
-        onError={() => setImageStatus("error")}
+        intervalMs={TIME_OF_DAY_INTERVAL_MS}
+        fadeDurationMs={TIME_OF_DAY_FADE_MS}
       />
 
       <BrandHeader
         visible={controlsVisible}
         endAdornment={
-          <IconButton
-            onClick={handleToggleFullscreen}
-            aria-label={isFullscreen ? "全画面表示を解除" : "全画面表示にする"}
-            sx={{
-              color: "common.white",
-              "&:hover": { bgcolor: "rgba(255, 255, 255, 0.15)" },
-            }}
-          >
-            {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-          </IconButton>
+          <Box sx={{ display: "flex" }}>
+            <IconButton
+              onClick={() => setTimerVisible((visible) => !visible)}
+              aria-label={timerVisible ? "タイマーを隠す" : "タイマーを表示"}
+              sx={{
+                color: "common.white",
+                "&:hover": { bgcolor: "rgba(255, 255, 255, 0.15)" },
+              }}
+            >
+              {timerVisible ? <TimerOffIcon /> : <TimerIcon />}
+            </IconButton>
+            <IconButton
+              onClick={handleToggleFullscreen}
+              aria-label={isFullscreen ? "全画面表示を解除" : "全画面表示にする"}
+              sx={{
+                color: "common.white",
+                "&:hover": { bgcolor: "rgba(255, 255, 255, 0.15)" },
+              }}
+            >
+              {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+            </IconButton>
+          </Box>
         }
       />
+
+      {/* 非表示中もカウントを止めないよう、アンマウントせず display で隠す */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: { xs: 64, sm: 72 },
+          right: { xs: 16, sm: 24 },
+          display: timerVisible ? "block" : "none",
+        }}
+      >
+        <PomodoroTimer />
+      </Box>
 
       {/* 下部オーバーレイ: スポット情報と操作パネル */}
       <Box
@@ -181,7 +227,12 @@ export default function AmbientPlayerView() {
           transition: "opacity 500ms ease",
         }}
       >
-        <AmbientSpotInfo name={spot.name} prefecture={spot.prefecture} />
+        <AmbientSpotInfo
+          name={spot.name}
+          prefecture={spot.prefecture}
+          isFavorite={favoriteIds.includes(spot.id)}
+          onToggleFavorite={handleToggleFavorite}
+        />
 
         <AmbientControls
           isPlaying={isPlaying}
@@ -189,6 +240,9 @@ export default function AmbientPlayerView() {
           onNextSpot={handleNextSpot}
           onTogglePlay={handleTogglePlay}
           onSoundChange={handleSoundChange}
+          favoritesOnly={favoritesOnly}
+          hasFavorites={favoriteIds.length > 0}
+          onFavoritesOnlyChange={setFavoritesOnly}
         />
       </Box>
     </Box>

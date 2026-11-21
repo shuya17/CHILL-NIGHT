@@ -82,11 +82,15 @@ export function usePomodoro() {
           : mode === "shortBreak"
             ? "shortBreakMinutes"
             : "longBreakMinutes";
-      if (setting === activeSetting && !isRunning) {
+      // 未開始のセッションだけ新しい時間に差し替える
+      // （一時停止中に設定を変えても、途中までの残り時間は失わないようにする）
+      const isUntouched =
+        !isRunning && remainingMs === getDurationMs(mode, settings);
+      if (setting === activeSetting && isUntouched) {
         resetTimer(getDurationMs(mode, nextSettings));
       }
     },
-    [isRunning, mode, resetTimer, settings],
+    [isRunning, mode, remainingMs, resetTimer, settings],
   );
 
   const reset = useCallback(() => {
