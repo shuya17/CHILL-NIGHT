@@ -3,6 +3,8 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
@@ -35,6 +37,10 @@ export interface AmbientControlsProps {
   onNextSpot: () => void;
   onTogglePlay: () => void;
   onSoundChange: (event: SelectChangeEvent) => void;
+  favoritesOnly: boolean;
+  // お気に入りが1件も無いときはスイッチを無効にする
+  hasFavorites: boolean;
+  onFavoritesOnlyChange: (checked: boolean) => void;
 }
 
 export default function AmbientControls({
@@ -43,6 +49,9 @@ export default function AmbientControls({
   onNextSpot,
   onTogglePlay,
   onSoundChange,
+  favoritesOnly,
+  hasFavorites,
+  onFavoritesOnlyChange,
 }: AmbientControlsProps) {
   return (
     <Box
@@ -99,6 +108,21 @@ export default function AmbientControls({
           ))}
         </Select>
       </FormControl>
+
+      <FormControlLabel
+        label="お気に入りのみ"
+        disabled={!hasFavorites}
+        control={
+          <Switch
+            checked={favoritesOnly && hasFavorites}
+            onChange={(event) => onFavoritesOnlyChange(event.target.checked)}
+          />
+        }
+        sx={{
+          color: "common.white",
+          ".MuiFormControlLabel-label.Mui-disabled": { color: "grey.500" },
+        }}
+      />
     </Box>
   );
 }

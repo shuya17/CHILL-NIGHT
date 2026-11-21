@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -6,9 +5,9 @@ import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
-type TimeOfDay = "morning" | "evening" | "night";
+export type TimeOfDay = "morning" | "evening" | "night";
 
-interface TimeOfDayCrossfadeProps {
+export interface TimeOfDayCrossfadeProps {
   images: Partial<Record<TimeOfDay, string>>;
   alt: string;
   intervalMs?: number;
@@ -17,38 +16,53 @@ interface TimeOfDayCrossfadeProps {
 
 const TIME_ORDER: TimeOfDay[] = ["morning", "evening", "night"];
 
+// 親要素いっぱいに朝・夕・夜の写真を重ね、一定間隔でクロスフェードさせる。
+// 親側で position: relative を指定しておくこと。
+// スポットが変わったときは key を変えて再マウントし、読み込み状態をリセットする想定。
 export default function TimeOfDayCrossfade({
   images,
   alt,
   intervalMs = 5000,
   fadeDurationMs = 1500,
 }: TimeOfDayCrossfadeProps) {
-  const phases = useMemo(
-    () =>
-      TIME_ORDER.map((time) => ({
-        time,
-        src: images[time],
-      })).filter(
-        (phase): phase is { time: TimeOfDay; src: string } =>
-          typeof phase.src === "string" && phase.src.trim() !== "",
-      ),
-    [images],
-  );
+  const { morning, evening, night } = images;
+  // 親がインラインのオブジェクトを渡しても再計算されないよう、URL文字列そのものを依存にする
+  const phases = useMemo(() => {
+    const sources: Record<TimeOfDay, string | undefined> = {
+      morning,
+      evening,
+      night,
+    };
+    return TIME_ORDER.map((time) => ({ time, src: sources[time] })).filter(
+      (phase): phase is { time: TimeOfDay; src: string } =>
+        typeof phase.src === "string" && phase.src.trim() !== "",
+    );
+  }, [morning, evening, night]);
 
   const [loadedImages, setLoadedImages] = useState<Set<TimeOfDay>>(
-    new Set(),
+    () => new Set(),
   );
   const [failedImages, setFailedImages] = useState<Set<TimeOfDay>>(
-    new Set(),
+    () => new Set(),
   );
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const markLoaded = (time: TimeOfDay) => {
+    setLoadedImages((previous) =>
+      previous.has(time) ? previous : new Set(previous).add(time),
+    );
+  };
+
+  const markFailed = (time: TimeOfDay) => {
+    setFailedImages((previous) =>
+      previous.has(time) ? previous : new Set(previous).add(time),
+    );
+  };
 
   const availableIndices = useMemo(
     () =>
       phases
-        .map((phase, index) =>
-          loadedImages.has(phase.time) ? index : -1,
-        )
+        .map((phase, index) => (loadedImages.has(phase.time) ? index : -1))
         .filter((index) => index !== -1),
     [phases, loadedImages],
   );
@@ -77,20 +91,15 @@ export default function TimeOfDayCrossfade({
     return () => clearInterval(intervalId);
   }, [availableIndices, intervalMs]);
 
-  const isLoading =
-    loadedImages.size + failedImages.size < phases.length;
-
+  const isLoading = loadedImages.size + failedImages.size < phases.length;
   const hasLoadedImage = loadedImages.size > 0;
 
   return (
     <Box
       sx={{
-        position: "fixed",
+        position: "absolute",
         inset: 0,
-        width: "100vw",
-        height: "100dvh",
-        zIndex: -1,
-        backgroundColor: "#000",
+        bgcolor: "common.black",
         overflow: "hidden",
       }}
     >
@@ -99,21 +108,20 @@ export default function TimeOfDayCrossfade({
           key={phase.time}
           component="img"
           src={phase.src}
-          alt={alt}
-          onLoad={() => {
-            setLoadedImages((previous) => {
-              const next = new Set(previous);
-              next.add(phase.time);
-              return next;
-            });
+          alt={index === displayIndex ? alt : ""}
+          aria-hidden={index !== displayIndex}
+          // キャッシュ済みの画像はハイドレーション前に読み込みが終わり onLoad が発火しないことがあるため、
+          // マウント時点で complete になっていれば読み込み済みとして扱う
+          ref={(element: HTMLImageElement | null) => {
+            if (!element?.complete) return;
+            if (element.naturalWidth > 0) {
+              markLoaded(phase.time);
+            } else {
+              markFailed(phase.time);
+            }
           }}
-          onError={() => {
-            setFailedImages((previous) => {
-              const next = new Set(previous);
-              next.add(phase.time);
-              return next;
-            });
-          }}
+          onLoad={() => markLoaded(phase.time)}
+          onError={() => markFailed(phase.time)}
           sx={{
             position: "absolute",
             inset: 0,
@@ -121,10 +129,14 @@ export default function TimeOfDayCrossfade({
             height: "100%",
             objectFit: "cover",
             opacity:
-              loadedImages.has(phase.time) && index === displayIndex
-                ? 1
-                : 0,
+              loadedImages.has(phase.time) && index === displayIndex ? 1 : 0,
             transition: `opacity ${fadeDurationMs}ms ease-in-out`,
+            // Ken Burns効果: 静止画をゆっくり拡大・移動させて「生きている画面」に見せる
+            animation: "timeOfDayKenBurns 20s ease-in-out infinite alternate",
+            "@keyframes timeOfDayKenBurns": {
+              "0%": { transform: "scale(1) translate(0, 0)" },
+              "100%": { transform: "scale(1.1) translate(-1.5%, -1.5%)" },
+            },
           }}
         />
       ))}
@@ -133,12 +145,7 @@ export default function TimeOfDayCrossfade({
         <Skeleton
           variant="rectangular"
           animation="wave"
-          sx={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-          }}
+          sx={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         />
       )}
 
@@ -150,12 +157,11 @@ export default function TimeOfDayCrossfade({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#fff",
+            bgcolor: "grey.900",
+            color: "grey.400",
           }}
         >
-          <Typography variant="body2">
-            画像を読み込めませんでした
-          </Typography>
+          <Typography variant="body2">画像を読み込めませんでした</Typography>
         </Box>
       )}
     </Box>
