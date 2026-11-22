@@ -1,3 +1,5 @@
+export type TimeOfDay = "morning" | "evening" | "night";
+
 export interface Spot {
   id: string;
   name: string;
@@ -5,9 +7,7 @@ export interface Spot {
   lat: number;
   lng: number;
   description: string;
-  images: {
-    morning: string;
-    evening: string;
-    night: string;
-  };
+  // data/images/spots/ 内の画像ファイル名（URLではない）
+  // ブラウザから参照するときは lib/spotImage.ts の getSpotImageUrl を使う
+  images: Record<TimeOfDay, string>;
 }

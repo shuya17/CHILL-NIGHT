@@ -14,6 +14,7 @@ import BrandHeader from "./BrandHeader";
 import PomodoroTimer from "./PomodoroTimer";
 import TimeOfDayCrossfade from "./TimeOfDayCrossfade";
 import { getFavorites, toggleFavorite } from "../lib/favorites";
+import { getSpotImageUrl } from "../lib/spotImage";
 import spotsData from "../../data/spots.json";
 import type { Spot } from "../types/spot";
 
@@ -163,7 +164,11 @@ export default function AmbientPlayerView() {
 
       <TimeOfDayCrossfade
         key={spot.id}
-        images={spot.images}
+        images={{
+          morning: getSpotImageUrl(spot.id, "morning"),
+          evening: getSpotImageUrl(spot.id, "evening"),
+          night: getSpotImageUrl(spot.id, "night"),
+        }}
         alt={spot.name}
         intervalMs={TIME_OF_DAY_INTERVAL_MS}
         fadeDurationMs={TIME_OF_DAY_FADE_MS}

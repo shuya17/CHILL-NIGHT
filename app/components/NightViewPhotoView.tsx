@@ -1,34 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
-import spotsData from "../../data/spots.json";
-import type { Spot } from "../types/spot";
-
-const spots = spotsData as Spot[];
-
-function pickRandomSpot(): Spot {
-  return spots[Math.floor(Math.random() * spots.length)];
-}
 
 type ImageStatus = "loading" | "loaded" | "error";
 
 export interface NightViewPhotoProps {
-  // ランダムに選ばれたスポット情報を親コンポーネントに通知する
-  onSpotSelect?: (spot: Spot) => void;
+  // 出題中の写真URL（取得中は null）。スポット名がURLやaltに出ないよう、親から受け取るだけにする
+  src: string | null;
+  // 問題の取得自体に失敗した場合
+  hasError?: boolean;
 }
 
-export default function NightViewPhoto({ onSpotSelect }: NightViewPhotoProps) {
-  const [spot] = useState<Spot>(() => pickRandomSpot());
+export default function NightViewPhoto({ src, hasError = false }: NightViewPhotoProps) {
   const [status, setStatus] = useState<ImageStatus>("loading");
 
-  useEffect(() => {
-    onSpotSelect?.(spot);
-    // 初回選出時のみ親へ通知すればよいため spot は依存に含めない
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (hasError || status === "error") {
+    return (
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 1,
+          bgcolor: "grey.900",
+          color: "grey.400",
+        }}
+      >
+        <Typography variant="body2">画像を読み込めませんでした</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -40,27 +47,12 @@ export default function NightViewPhoto({ onSpotSelect }: NightViewPhotoProps) {
         />
       )}
 
-      {status === "error" ? (
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-            bgcolor: "grey.900",
-            color: "grey.400",
-          }}
-        >
-          <Typography variant="body2">画像を読み込めませんでした</Typography>
-        </Box>
-      ) : (
+      {src && (
         <Box
           component="img"
-          src={spot.images.night}
-          alt={spot.name}
+          src={src}
+          // alt にスポット名を入れると検証ツールで答えが見えてしまうため、汎用の文言にする
+          alt="出題中の夜景写真"
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}
           sx={{
