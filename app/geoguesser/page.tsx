@@ -1,53 +1,68 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import BrandHeader from "../components/BrandHeader";
 import GeoguesserMap from "../components/GeoguesserMap";
+import type { CorrectAnswer } from "../components/GeoguesserMapView";
 import NightViewPhoto from "../components/NightViewPhoto";
-import { calculateDistance } from "../lib/distance";
-import { calculateScore } from "../lib/score";
-import type { Spot } from "../types/spot";
 
-interface GuessResult {
-  distanceKm: number;
-  score: number;
+// 出題・採点はサーバー（app/api/quiz）で行い、ブラウザには答え合わせまで正解を渡さない。
+// こうしないと、検証ツールでJSやstateを見るだけでスポットが分かってしまう。
+interface Quiz {
+  token: string;
+  imageUrl: string;
 }
 
 export default function GeoguesserPage() {
-  // 答え合わせで使うため、出題中のスポット情報を親で保持しておく
-  const [currentSpot, setCurrentSpot] = useState<Spot | null>(null);
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [quizError, setQuizError] = useState(false);
   const [guessCoordinate, setGuessCoordinate] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [result, setResult] = useState<GuessResult | null>(null);
+  // 答え合わせ後に一度だけセットするため、参照が安定し地図側のポップアップ自動オープンが再発火しない
+  const [correctAnswer, setCorrectAnswer] = useState<CorrectAnswer | null>(
+    null,
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDecide = () => {
-    if (!currentSpot || !guessCoordinate) return;
-
-    const distanceKm = calculateDistance(
-      guessCoordinate.lat,
-      guessCoordinate.lng,
-      currentSpot.lat,
-      currentSpot.lng,
-    );
-    const score = calculateScore(distanceKm);
-    setResult({ distanceKm, score });
-  };
-
-  // resultが変わらない限り参照を安定させ、地図側のポップアップ自動オープンが再発火しないようにする
-  const correctAnswer = useMemo(() => {
-    if (!result || !currentSpot) return null;
-    return {
-      lat: currentSpot.lat,
-      lng: currentSpot.lng,
-      name: currentSpot.name,
-      description: currentSpot.description,
-      distanceKm: result.distanceKm,
-      score: result.score,
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/quiz/new", { cache: "no-store" })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json() as Promise<Quiz>;
+      })
+      .then((data) => {
+        if (!cancelled) setQuiz(data);
+      })
+      .catch(() => {
+        if (!cancelled) setQuizError(true);
+      });
+    return () => {
+      cancelled = true;
     };
-  }, [result, currentSpot]);
+  }, []);
+
+  const handleDecide = async () => {
+    if (!quiz || !guessCoordinate || isSubmitting || correctAnswer) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/quiz/answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: quiz.token, ...guessCoordinate }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setCorrectAnswer((await res.json()) as CorrectAnswer);
+    } catch {
+      alert("答え合わせに失敗しました。もう一度お試しください。");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Box
@@ -61,7 +76,7 @@ export default function GeoguesserPage() {
         bgcolor: "common.black",
       }}
     >
-      <NightViewPhoto onSpotSelect={setCurrentSpot} />
+      <NightViewPhoto src={quiz?.imageUrl ?? null} hasError={quizError} />
 
       <BrandHeader />
 
